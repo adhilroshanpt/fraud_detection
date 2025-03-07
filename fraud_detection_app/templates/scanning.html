@@ -1,0 +1,147 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanning Progress</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .progress {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .scanning {
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress">46%</div>
+        
+        <div class="scanning">Scanning "Facebook"</div>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wave Loading with Percentage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #F6F9FF;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            background: #ccc;
+            border: 5px solid #fff;
+            box-shadow: 0 0 0 5px #4973ff;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #4973ff;
+            border-radius: 50%;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+        .wave::before, .wave::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .wave::before {
+            border-radius: 40%;
+            background: rgba(255, 255, 255, 1);
+            animation: animate 5s linear infinite;
+        }
+        .wave::after {
+            border-radius: 35%;
+            background: rgba(255, 255, 255, 0.5);
+            animation: animate 5s linear infinite;
+        }
+        @keyframes animate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            50% { transform: translate(-50%, -80%) rotate(270deg); }
+            80%, 90% { transform: translate(-50%, -100%) rotate(360deg); }
+            100% { transform: translate(-50%, -50%) rotate(340deg); }
+        }
+        .text {
+            position: absolute;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="circle">
+        <div class="wave"></div>
+        <div class="text">Scanning... <span id="percentage">0%</span></div>
+    </div>
+
+    <script>
+        // Simulate scanning and redirect to next page
+        setTimeout(() => {
+            window.location.href = "{% url 'result_view' %}";
+        }, 3000);  // 3 seconds delay
+    </script>
+    
+    <script>
+        let percentage = 0;
+        const percentageText = document.getElementById("percentage");
+
+        function updatePercentage() {
+            if (percentage < 100) {
+                percentage += 1;
+                percentageText.textContent = percentage + "%";
+                setTimeout(updatePercentage, 50); // Adjust speed of increment
+            }
+        }
+        updatePercentage();
+    </script>
+</body>
+</html>

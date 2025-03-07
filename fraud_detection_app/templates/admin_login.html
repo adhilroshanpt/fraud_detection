@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | App Defender</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 700px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+
+
+        .left-section {
+            width: 70%;
+            padding: 60px;
+            position: relative;
+            z-index: 3;
+            /* Brings input fields to the front */
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #0047b3;
+            box-shadow: 0 0 0 2px rgba(0, 71, 179, 0.1);
+        }
+
+        /* .left-form{
+            margin-top: 0px;
+            width: 60%;
+            
+            padding: 60px;
+            position: absolute;
+            top: 45%;
+            left: 35%;
+            transform: translate(-50%, -50%);
+        } */
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            height: 30px;
+        }
+
+        .right-section {
+            width: 35%;
+            background: #0052CC;
+            display: flex;
+            /* justify-content: center; */
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-illustrations img {
+            width: 600px;
+            height: 600px;
+            margin-left: 550px;
+            position: absolute;
+            border-radius: 0;
+            margin-top: 25px;
+
+
+
+
+
+        }
+
+        .background-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .circle-1 {
+            top: 5%;
+            right: 10%;
+            width: 50px;
+            height: 50px;
+        }
+
+        .circle-2 {
+            bottom: 10%;
+            right: 15%;
+            width: 70px;
+            height: 70px;
+        }
+
+        .circle-3 {
+            top: 80%;
+            left: 10%;
+            width: 30px;
+            height: 30px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #111;
+            margin-top: 60px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        label {
+            font-weight: 500;
+            display: block;
+            margin: 0 0 8px;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #0047b3;
+            box-shadow: 0 0 0 2px rgba(0, 71, 179, 0.1);
+        }
+
+        /* .success-input {
+            border-bottom: 3px solid #00c853 !important;
+        } */
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-container input {
+            padding-right: 40px;
+        }
+
+        .password-container .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        .forgot-password {
+            text-decoration: none;
+            color: #666;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #0047b3;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #003399;
+        }
+
+        .app-illustrations {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 90%;
+            z-index: 2;
+        }
+
+        .left-form {
+            margin-left: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="logo"> <img src="{% static 'images/Frame 1.svg' %}" alt="App Defender" class="logo"
+                    onerror="this.src='/api/placeholder/150/50'; this.onerror=null;"></div>
+            <div class="left-form">
+                <form id="login-form" method="POST" action="{% url 'adminlogin_view' %}">
+                    {% csrf_token %}
+                <h1>Admin Login</h1>
+                
+
+                <label for="username">User name</label>
+                <input type="text" id="username" name="username" placeholder="Type your username here" class="success-input"
+                    style="width: 400px;height: 70px;"><br><br>
+
+                <label for="password">Enter your Password</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Type your password here"
+                        style="width: 400px; height: 70px;">
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                </div>
+
+
+                <!-- <div class="login-options" style="width: 400px;">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember" style="display:inline; font-weight: normal;">Remember me?</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot Password ?</a>
+                </div> -->
+
+                <button class="btn-login" id="login-button" type="submit" style="width: 400px;height: 70px;">LogIn</button>
+                </form>
+            </div>
+        </div>
+        <div class="app-illustrations">
+            <img src="{% static 'images/Rectangle73.svg' %}" alt="" style="border-radius: 16px;">
+        </div>
+        <div class="right-section">
+            <div class="background-elements">
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+                <div class="circle circle-3"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            let passwordField = document.getElementById('password');
+            let eyeIcon = document.getElementById('eye-icon');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.innerHTML = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+                                    <line x1="3" y1="3" x2="21" y2="21"></line>`;
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.innerHTML = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>`;
+            }
+        }
+    </script>
+
+<script>
+    document.getElementById("login-form").addEventListener("submit", function (event) {
+        const loginButton = document.getElementById("login-button");
+        
+        // Disable the button
+        loginButton.disabled = true;
+        loginButton.innerText = "Logging in...";  // Optional: Change button text
+        
+        // Optional: Add a loading spinner
+        loginButton.style.opacity = "0.6";
+        
+        // Form submission continues and the backend handles the response
+    });
+</script>
+
+</body>
+
+</html>
