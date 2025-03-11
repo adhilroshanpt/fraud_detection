@@ -102,13 +102,13 @@
     <!-- Sidebar -->
     <div class="sidebar">
        <img src="{% static 'images/Frame 1.svg' %}" alt="App Defender"><br><br>
-        <a href="">
+        <a href="{% url 'dashboard' %}">
             <i class="fas fa-chart-bar me-2"></i> Dashboard
         </a>
-        <a href=""><i class="fas fa-users me-2"></i> User Management</a>
-        <a href=""><i class="fas fa-tasks me-2"></i> Activities</a>
-        <a href=""><i class="bi bi-grid me-2"></i>Applications</a><hr>
-        <a href="" class="logout"><i class="fas fa-power-off me-2"></i> Logout</a>
+        <a href="{% url 'usermanagment_view' %}"><i class="fas fa-users me-2"></i> User Management</a>
+        <a href="{% url 'activities_view' %}"><i class="fas fa-tasks me-2"></i> Activities</a>
+        <a href="{% url 'application_view' %}"><i class="bi bi-grid me-2"></i>Applications</a><hr>
+        <!-- <a href="" class="logout"><i class="fas fa-power-off me-2"></i> Logout</a> -->
     </div>
 
     <!-- Top Navbar -->
@@ -126,21 +126,23 @@
     </nav>
 
    
+    <!-- Main Content -->
     <div class="content">
         <div class="table-container">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Activities</h3><br>
-
+                <h3>Scanned Applications</h3>
                 <div>
                     <label>Show up to</label>
-                    <select class="form-select d-inline w-auto" id="rowsPerPage" onchange="changeRowsPerPage()">
+                    <select class="form-select d-inline w-auto" id="rowsPerPage">
                         <option value="10">10</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
                     </select>
                 </div>
             </div>
-            <table class="table table-striped" id="dataTable">
+            
+            <!-- Scanned Apps Table -->
+            <table class="table table-striped">
                 <thead class="table-light">
                     <tr>
                         <th>Application Name</th>
@@ -149,86 +151,48 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                    <!-- Data will be inserted dynamically -->
+                <tbody>
+                    {% for app in page_obj %}
+                        <tr>
+                            <td>{{ app.app_name }}</td>
+                            <td>{{ app.developer }}</td>
+                            <td>{{ app.security_score }}%</td>
+                            <td>
+                                <button class="btn btn-sm btn-light"><i class="fas fa-comment"></i></button>
+                                <button class="btn btn-sm btn-light"><i class="fas fa-ban"></i></button>
+                                <button class="btn btn-sm btn-light"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No Scanned Apps Available</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
+
+            <!-- Pagination -->
             <nav>
-                <ul class="pagination justify-content-center" id="pagination">
-                    <!-- Pagination will be inserted dynamically -->
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">‹</a></li>
+                    {% endif %}
+
+                    <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">›</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
     </div>
 
-    <script>
-        let data = Array.from({ length: 400 }, (_, i) => ({
-            name: "Fake Bank",
-            developer: "ABC Ltd.",
-            fraudScore: "92%"
-        }));
-        let currentPage = 1;
-        let rowsPerPage = 10;
-
-        function renderTable() {
-            const tableBody = document.getElementById("tableBody");
-            tableBody.innerHTML = "";
-            let start = (currentPage - 1) * rowsPerPage;
-            let end = start + rowsPerPage;
-            let paginatedItems = data.slice(start, end);
-            paginatedItems.forEach(item => {
-                let row = `<tr>
-                    <td>${item.name}</td>
-                    <td>${item.developer}</td>
-                    <td>${item.fraudScore}</td>
-                    <td>
-                        <button class="btn btn-sm btn-light"><i class="fas fa-comment"></i></button>
-                        <button class="btn btn-sm btn-light"><i class="fas fa-ban"></i></button>
-                        <button class="btn btn-sm btn-light"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>`;
-                tableBody.innerHTML += row;
-            });
-            renderPagination();
-        }
-
-        function renderPagination() {
-            const pagination = document.getElementById("pagination");
-            pagination.innerHTML = "";
-            let totalPages = Math.ceil(data.length / rowsPerPage);
-            let pages = [];
-            
-            if (currentPage > 1) {
-                pages.push(`<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">‹</a></li>`);
-            }
-            for (let i = 1; i <= totalPages; i++) {
-                if (i === 1 || i === totalPages || Math.abs(i - currentPage) < 3) {
-                    pages.push(`<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`);
-                } else if (Math.abs(i - currentPage) === 3) {
-                    pages.push(`<li class="page-item disabled"><a class="page-link" href="#">…</a></li>`);
-                }
-            }
-            if (currentPage < totalPages) {
-                pages.push(`<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">›</a></li>`);
-            }
-            pagination.innerHTML = pages.join("");
-        }
-
-        function changePage(page) {
-            currentPage = page;
-            renderTable();
-        }
-
-        function changeRowsPerPage() {
-            rowsPerPage = parseInt(document.getElementById("rowsPerPage").value);
-            currentPage = 1;
-            renderTable();
-        }
-
-        renderTable();
-    </script>
-    
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html> 

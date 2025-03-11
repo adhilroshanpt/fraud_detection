@@ -86,7 +86,10 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 4}  # Change the number to your desired minimum length
+    },
     # Remove or comment out the NumericPasswordValidator if you want:
     # {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]

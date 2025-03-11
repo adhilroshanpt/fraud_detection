@@ -11,7 +11,7 @@ class UserRegistrationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.user_type = 'user'  # Automatically set user_type to seller
+        user.user_type = 'user' 
         user.email = self.cleaned_data['email']
         if commit:
             user.save()

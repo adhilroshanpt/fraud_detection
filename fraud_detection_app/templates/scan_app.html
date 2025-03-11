@@ -10,85 +10,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-
         body {
             background-color: #F6F9FF;
         }
-
         .navbar {
-            padding: 0px 20px;
-
+            padding-left: 15px !important;
+            padding-right: 15px !important;
         }
-
-        .navbar-brand {
-            position: absolute;
-            left: 10%;
-            transform: translateX(-50%);
-
-        }
-
-
-        .navbar-brand img {
-            height: 25px;
-            margin-right: 8px;
-        }
-
-
-
         .search-container {
-
-            width: 400px;
-            position: absolute;
-            left: 40%;
-            transform: translateX(-50%);
-
+            position: relative;
+            width: 300px;
         }
-
-        .search-input {
+        .search-results {
+            position: absolute;
             width: 100%;
-            padding: 10px 40px 10px 10px;
-
-            background-color: #F9F9F9;
+            background: white;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
+            display: none;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
         }
-
-        .search-icon {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            pointer-events: none;
-
+        .result-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
         }
-
-
-
-       
-        .dropdown {
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 16px;
+        .result-item:hover {
+            background: #f1f1f1;
         }
-
-        /* Main Content */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
         h2 {
             font-size: 20px;
             margin-bottom: 15px;
@@ -96,149 +46,192 @@
 
         .app-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
     gap: 20px;
+    margin-top: 20px;
 }
 
-/* Ensure responsiveness */
-@media (max-width: 992px) {
-    .app-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
-    }
+.app-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
 }
 
-@media (max-width: 768px) {
-    .app-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
-    }
+.app-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width: 480px) {
-    .app-grid {
-        grid-template-columns: repeat(1, 1fr); /* 1 column on extra small screens */
-    }
+.app-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 15px;
 }
 
-        .app-card {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
+.app-details {
+    flex-grow: 1;
+}
 
-        .app-card img {
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
-        }
+.app-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
 
-        .app-details {
-            flex-grow: 1;
-        }
+.app-time {
+    font-size: 12px;
+    color: gray;
+}
 
-        .app-name {
-            font-size: 16px;
-            font-weight: bold;
-        }
+        .search-container {
 
-        .app-time {
-            font-size: 12px;
-            color: gray;
-        }
+width: 400px;
+position: absolute;
+left: 40%;
+transform: translateX(-50%);
 
-      
+}
+
+.search-input {
+width: 100%;
+padding: 10px 40px 10px 10px;
+
+background-color: #F9F9F9;
+border: 1px solid #ccc;
+border-radius: 5px;
+font-size: 16px;
+}
+
+.search-icon {
+position: absolute;
+top: 50%;
+right: 10px;
+transform: translateY(-50%);
+width: 20px;
+height: 20px;
+pointer-events: none;
+
+}
+
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm container-fluid">
         <div class="container">
-
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
-                <img src="{% static 'images/Frame 1.svg' %}" alt="App Defender">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{% url 'userdashboard_view' %}">
+                <img src="{% static 'images/Frame 1.svg' %}" alt="App Defender" height="25">
             </a>
             <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search apps...">
                 <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"
                     viewBox="0 0 16 16">
                     <path
                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                 </svg>
+                <div id="searchResults" class="search-results"></div>
             </div>
-
+            <!-- <div class="search-container">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search apps...">
+                <div id="searchResults" class="search-results"></div>
+            </div> -->
+            <div class="dropdown ms-auto">
+                <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                    <i class="fas fa-user-circle fa-2x text-dark"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="{% url 'userlogout_view' %}">Logout</a></li>
+                </ul>
+            </div>
         </div>
+    </nav><br>
 
-       
-        <div class="dropdown">
-            <!-- Dropdown button with user circle icon -->
-            <button class="btn  dropdown-toggle" type="button" id="userDropdown"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user-circle fa-2x text-dark me-2"></i> 
-            </button>
-            <!-- Dropdown menu -->
-            <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Logout</a></li>
-            </ul>
-        </div>
-        </div>
-    </nav>
-
-     <!-- Main Content -->
-     <div class="container">
+    <div class="container">
         <h2>Choose App</h2>
         <div class="app-grid">
-            <!-- Static App Cards -->
-            <div class="app-card" data-url="{% url 'scanning_view' %}">
-                <img src="{% static 'images/Frame 41.svg' %}" alt="Facebook">
+            {% for app in scanned_apps %}
+            <div class="app-card" onclick="redirectToScanning('{{ app.package_name }}')">
+                <img src="{{ app.icon }}" alt="{{ app.app_name }}">
                 <div class="app-details">
-                    <div class="app-name">Facebook</div>
-                    <div class="app-time">Last scanned: 5 hours ago</div>
+                    <div class="app-name">{{ app.app_name }}</div>
+                    <div class="app-time">Last scanned: {{ app.scanned_at }}</div>
                 </div>
             </div>
-            <div class="app-card" data-url="{% url 'scanning_view' %}">
-                <img src="{% static 'images/Instagram_logo_2022.svg 1.svg' %}" alt="Facebook">
-                <div class="app-details">
-                    <div class="app-name">Instagram</div>
-                    <div class="app-time">Last scanned: 5 hours ago</div>
-                </div>
-            </div>
-            <div class="app-card" data-url="{% url 'scanning_view' %}">
-                <img src="{% static 'images/Twitter logo.svg' %}" alt="Facebook">
-                <div class="app-details">
-                    <div class="app-name">Twitter</div>
-                    <div class="app-time">Last scanned: 5 hours ago</div>
-                </div>
-            </div>
-          
-           
-        
+            {% empty %}
+            <p>No scanned apps available.</p>
+            {% endfor %}
+        </div>
     </div>
+    
 
-        
+    <script>
+        function redirectToScanning(packageName) {
+            if (packageName) {
+                window.location.href = `/scanning/?package=${packageName}`;
+    
+                // After a short delay (e.g., 2s), redirect to app details
+                setTimeout(() => {
+                    window.location.href = `/app-details/?package=${packageName}`;
+                }, 2000); // Adjust delay as needed
+            }
+        }
+    </script>
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const appCards = document.querySelectorAll(".app-card");
-    
-            appCards.forEach(card => {
-                card.addEventListener("click", function () {
-                    const scanPageUrl = this.getAttribute("data-url");
-                    
-                   
-                    setTimeout(() => {
-                        window.location.href = "{% url 'scanning_view' %}";
-                    }, 2000);
-                });
+            const searchInput = document.getElementById("searchInput");
+            const searchResults = document.getElementById("searchResults");
+
+            searchInput.addEventListener("input", function () {
+                const query = this.value.trim();
+                if (query.length > 2) {
+                    fetch(`/search_apps/?q=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            searchResults.innerHTML = "";
+                            if (data.apps.length > 0) {
+                                data.apps.forEach(app => {
+                                    let appItem = document.createElement("div");
+                                    appItem.classList.add("result-item");
+                                    appItem.innerHTML = `
+                                        <img src="${app.icon}" width="30" height="30" class="me-2" style="border-radius:5px;">
+                                        <strong>${app.title}</strong> - ${app.developer}
+                                    `;
+
+                                    appItem.onclick = function () {
+                                        const packageName = app.package_name;
+                                        window.location.href = `/scanning/?package=${packageName}`;
+                                    };
+
+                                    searchResults.appendChild(appItem);
+                                });
+                                searchResults.style.display = "block";
+                            } else {
+                                searchResults.style.display = "none";
+                            }
+                        });
+                } else {
+                    searchResults.style.display = "none";
+                }
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!searchResults.contains(event.target) && event.target !== searchInput) {
+                    searchResults.style.display = "none";
+                }
             });
         });
     </script>
-    
 
-
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

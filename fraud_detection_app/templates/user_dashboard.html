@@ -10,8 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
  
-    
-
+  
 
     <style>
         * {
@@ -265,6 +264,7 @@
         .app-icon img{
             width: 50px;
             height: 50px;
+            border-radius: 4px;
 
         }
         .app-details {
@@ -327,17 +327,17 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
 
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{% url 'userdashboard_view' %}">
                 <img src="{% static 'images/Frame 1.svg' %}" alt="App Defender">
             </a>
-            <div class="search-container">
+            <!-- <div class="search-container">
                 <input type="text" class="search-input" placeholder="Search">
                 <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"
                     viewBox="0 0 16 16">
                     <path
                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                 </svg>
-            </div>
+            </div> -->
 
         </div>
 
@@ -360,6 +360,17 @@
         </div>
         </div>
     </nav>
+   
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-2" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
 
 
 
@@ -367,13 +378,14 @@
 
     <div class="container">
         <div class="dashboard-container">
+            
             <h1 class="dashboard-title">Fraud Detection Dashboard</h1>
 
             <div class="stats-container">
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3>Total Apps Scanned</h3>
-                        <div class="number">{{ scan_summary.total_apps_scanned }}</div>
+                        <div class="number">{{ total_scanned_apps }}</div>
                     </div>
                     <div class="icon-circle blue">
                         <img src="{% static 'images/Frame 25.svg' %}" alt="">
@@ -383,26 +395,26 @@
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3>Threats Detected</h3>
-                        <div class="number">{{ scan_summary.threats_detected }}</div>
+                        <div class="number">{{ fraudulent_apps_count }}</div>
                     </div>
                     <div class="icon-circle red">
                         <img src="{% static 'images/Frame 25 (1).svg' %}" alt="">
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <!-- <div class="stat-card">
                     <div class="stat-info">
                         <h3>Community Reports</h3>
-                        <div class="number">{{ scan_summary.community_reports }}</div>
+                        <div class="number">0</div>
                     </div>
                     <div class="icon-circle green">
                         <img src="{% static 'images/Frame 25 (2).svg' %}" alt="">
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
-        <div class="filter-container">
+        <!-- <div class="filter-container">
             <div class="filters">
                 <button class="filter-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#333">
@@ -427,7 +439,7 @@
                     </svg>
                     Social
                 </button>
-            </div>
+            </div> -->
 
             <!-- <div class="sort-dropdown">
                 Sort by: Latest
@@ -435,74 +447,69 @@
                     <path d="M7 10l5 5 5-5z" />
                 </svg>
             </div> -->
-        </div>
+        <!-- </div> -->
+        
 
         <div class="app-sections">
             <!-- Safe Apps Section -->
             <div class="app-section safe-apps">
                 <h2 class="section-title"><img src="{% static 'images/Group.svg' %}" alt=""> Safe Apps</h2>
-                
-                {% if safeapps %}
-                    {% for app in safeapps %}
-                    <div class="app-card">
+        
+                {% for app in safe_apps %}
+                    <div class="app-card" onclick="redirectToScanning('{{ app.package_name }}')">
                         <div class="app-info">
-                            <div class="app-icon"><img src="{{ app.app_image.url }}" alt=""></div>
+                            <div class="app-icon"><img src="{{ app.icon }}" alt="{{ app.app_name }}" width="30"></div>
                             <div class="app-details">
                                 <h4>{{ app.app_name }}</h4>
-                                <p>Last Active: {{ app.time_since_last_activity }}</p>
+                                <p>Last Active: {{ app.scanned_at }}</p>
                             </div>
                         </div>
                         <div class="status-badge-safe">Safe</div>
                     </div>
-                    {% endfor %}
-                {% else %}
+                {% empty %}
                     <p class="no-data"><span class="warning-icon">⚠️</span>No Safe Apps Available</p>
-                {% endif %}
+                {% endfor %}
             </div>
         
             <!-- Fraudulent Apps Section -->
             <div class="app-section fraud-apps">
                 <h2 class="section-title"><img src="{% static 'images/mdi_virus.svg' %}" alt=""> Fraudulent Apps</h2>
-                
-                {% if fraudapps %}
-                    {% for app in fraudapps %}
-                    <div class="app-card" data-url="{% url 'scanning_view' %}">
+        
+                {% for app in fraudulent_apps %}
+                    <div class="app-card" onclick="redirectToScanning('{{ app.package_name }}')">
                         <div class="app-info">
-                            <div class="app-icon"><img src="{{ app.app_image.url }}" alt=""></div>
+                            <div class="app-icon"><img src="{{ app.icon }}" alt="{{ app.app_name }}" width="30"></div>
                             <div class="app-details">
                                 <h4>{{ app.app_name }}</h4>
-                                <p>Last Active: {{ app.time_since_last_activity }}</p>
+                                <p>Last Active: {{ app.scanned_at }}</p>
                             </div>
                         </div>
                         <div class="status-badge-risk">High Risk</div>
                     </div>
-                    {% endfor %}
-                {% else %}
+                {% empty %}
                     <p class="no-data"><span class="warning-icon">⚠️</span>No Fraudulent Apps Detected</p>
-                {% endif %}
+                {% endfor %}
             </div>
         </div>
+        
     <script>
         function redirectToNext() {
             window.location.href = "{% url 'scanapp_view' %}";  // Redirects to the next page
         }
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const appCards = document.querySelectorAll(".app-card");
+        function redirectToScanning(packageName) {
+            if (packageName) {
+                window.location.href = `/scanning/?package=${packageName}`;
     
-            appCards.forEach(card => {
-                card.addEventListener("click", function () {
-                    const scanPageUrl = this.getAttribute("data-url");
-                    
-                   
-                    setTimeout(() => {
-                        window.location.href = "{% url 'scanning_view' %}";
-                    }, 2000);
-                });
-            });
-        });
+                // After a short delay (e.g., 2s), redirect to app details
+                setTimeout(() => {
+                    window.location.href = `/app-details/?package=${packageName}`;
+                }, 2000); // Adjust delay as needed
+            }
+        }
     </script>
+    
 
    
 

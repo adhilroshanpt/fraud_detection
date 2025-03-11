@@ -96,7 +96,7 @@
             border-radius: 0;
             margin-top: 0px;
 
-                   
+
         }
 
         .background-elements {
@@ -250,6 +250,72 @@
         .left-form {
             margin-left: 60px;
         }
+
+        .account-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .account-link {
+            text-decoration: none;
+            color: #007bff;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .account-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .login-link {
+            font-weight: bold;
+        }
+
+        .message-container {
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #555;
+            margin-left: 10px;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        .alert {
+            position: relative;
+            padding: 12px 20px 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 
@@ -259,54 +325,72 @@
             <div class="logo"> <img src="{% static 'images/Frame 1.svg' %}" alt="App Defender" class="logo"
                     onerror="this.src='/api/placeholder/150/50'; this.onerror=null;"></div>
             <div class="left-form">
+                {% if messages %}
+                    <div class="message-container">
+                        {% for message in messages %}
+                        <div
+                            class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                            <span class="message-text">{{ message }}</span>
+                            <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 <h1>Login with App Defender</h1>
                 <p>Login to detect and prevent fraudulent apps before they<br> compromise your privacy. Get real-time
                     fraud insights and<br> stay protected with AppDefender.</p>
                 <form id="login-form" method="POST" action="{% url 'user_register' %}">
-                 {% csrf_token %}
-                <label for="username">User name</label>
-                <input type="text" id="username" name="username" placeholder="Type your username here" class="success-input"
-                    style="width: 400px;height: 56px;"><br><br>
+                    
+                    {% csrf_token %}
+                    <label for="username">User name</label>
+                    <input type="text" id="username" name="username" placeholder="Type your username here"
+                        class="success-input" style="width: 400px;height: 56px;"><br><br>
 
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="Type your Email here" class="success-input"
                         style="width: 400px;height: 56px;"><br><br>
 
-                <label for="password1">Enter your Password</label>
-                <div class="password-container">
-                    <input type="password" name="password1" id="password1"  placeholder="Type your password here"
-                        style="width: 400px; height: 56px;">
-                    <span class="toggle-password" onclick="togglePassword()">
-                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                    </span>
-                </div><br>
+                    <label for="password1">Enter your Password</label>
+                    <div class="password-container">
+                        <input type="password" name="password1" id="password1" placeholder="Type your password here"
+                            style="width: 400px; height: 56px;">
+                        <span class="toggle-password" onclick="togglePassword()">
+                            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </span>
+                    </div><br>
 
-                <label for="password2">Confirm your Password</label>
-                <div class="password-container">
-                    <input type="password" name="password2" id="password2"  placeholder="Type your password here"
-                        style="width: 400px; height: 56px;">
-                    <span class="toggle-password" onclick="togglePassword()">
-                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                    </span>
-                </div><br>
-              
+                    <label for="password2">Confirm your Password</label>
+                    <div class="password-container">
+                        <input type="password" name="password2" id="password2" placeholder="Type your password here"
+                            style="width: 400px; height: 56px;">
+                        <span class="toggle-password" onclick="togglePassword()">
+                            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </span>
+                    </div><br>
+                    <div class="text-center mt-3">
+                        <p class="account-text">
+                            <a href="#" class="account-link">Already have an account?</a> |
+                            <a href="{% url 'userlogin_view' %}" class="account-link login-link">Login now</a>
+                        </p>
+                    </div>
 
-              
 
 
-                
 
-                <button id="login-button" class="btn-login" type="submit" style="width: 400px;height: 56px;" >Register</button>
+
+
+                    <button id="login-button" class="btn-login" type="submit"
+                        style="width: 400px;height: 56px;">Register</button>
                 </form>
             </div>
         </div>
@@ -323,8 +407,17 @@
 
         </div>
     </div>
+    <script>
+        // Auto-hide messages after 5 seconds
+        setTimeout(function () {
+            let alerts = document.querySelectorAll(".alert");
+            alerts.forEach(function (alert) {
+                alert.style.opacity = "0";
+                setTimeout(() => alert.style.display = "none", 300);
+            });
+        }, 5000);
+    </script>
 
-  
     <script>
         function togglePassword() {
             let passwordField = document.getElementById('password');
@@ -342,20 +435,20 @@
         }
     </script>
 
-<script>
-    document.getElementById("login-form").addEventListener("submit", function (event) {
-        const loginButton = document.getElementById("login-button");
-        
-        // Disable the button
-        loginButton.disabled = true;
-        loginButton.innerText = "Registering...";  // Optional: Change button text
-        
-        // Optional: Add a loading spinner
-        loginButton.style.opacity = "0.6";
-        
-        // Form submission continues and the backend handles the response
-    });
-</script>
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            const loginButton = document.getElementById("login-button");
+
+            // Disable the button
+            loginButton.disabled = true;
+            loginButton.innerText = "Registering...";  // Optional: Change button text
+
+            // Optional: Add a loading spinner
+            loginButton.style.opacity = "0.6";
+
+            // Form submission continues and the backend handles the response
+        });
+    </script>
 
 </body>
 

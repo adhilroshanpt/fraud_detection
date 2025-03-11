@@ -115,8 +115,20 @@
             align-items: center;
             text-align: center;
             height: 100%;
-            min-height: 180px;
-            /* Adjust if needed */
+            min-height: 200px; /* Ensure consistent height */
+            border-radius: 10px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+        }
+
+        .user-card:hover {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
     </style>
 </head>
@@ -126,13 +138,13 @@
     <!-- Sidebar -->
     <div class="sidebar">
        <img src="{% static 'images/Frame 1.svg' %}" alt="App Defender"><br><br>
-        <a href="">
+        <a href="{% url 'dashboard' %}">
             <i class="fas fa-chart-bar me-2"></i> Dashboard
         </a>
-        <a href=""><i class="fas fa-users me-2"></i> User Management</a>
-        <a href=""><i class="fas fa-tasks me-2"></i> Activities</a>
-        <a href=""><i class="bi bi-grid me-2"></i>Applications</a><hr>
-        <a href="" class="logout"><i class="fas fa-power-off me-2"></i> Logout</a>
+        <a href="{% url 'usermanagment_view' %}"><i class="fas fa-users me-2"></i> User Management</a>
+        <a href="{% url 'activities_view' %}"><i class="fas fa-tasks me-2"></i> Activities</a>
+        <a href="{% url 'application_view' %}"><i class="bi bi-grid me-2"></i>Applications</a><hr>
+        <!-- <a href="" class="logout"><i class="fas fa-power-off me-2"></i> Logout</a> -->
     </div>
   
     <!-- Top Navbar -->
@@ -151,27 +163,33 @@
 
    
     <div class="content">
-        <div class="col-md-3 d-flex">
-            <div class="card user-card h-100 w-100 p-3 position-relative">
-                <!-- Three-dot button (Options) -->
-                <div class="dropdown position-absolute top-0 end-0 m-2">
-                    <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v"></i> <!-- Three-dot icon -->
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">View</a></li>
-                        <li><a class="dropdown-item" href="#">Edit</a></li>
-                        <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                    </ul>
+        <h4 class="mt-4">Users</h4><br>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">  <!-- Responsive Grid Layout -->
+            {% for user in users %}
+            <div class="col d-flex">
+                <div class="card user-card w-100 p-3 position-relative">
+                    <!-- Three-dot button (Options) -->
+                    <div class="dropdown position-absolute top-0 end-0 m-2">
+                        <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i> <!-- Three-dot icon -->
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">View</a></li>
+                            <li><a class="dropdown-item" href="#">Edit</a></li>
+                            <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                        </ul>
+                    </div>
+        
+                    <!-- User Details -->
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Joined Date:</strong> {{ user.date_joined }}</p>
+                    <p><strong>Role:</strong> {{ user.get_user_type_display }}</p>
                 </div>
-        
-                <!-- User Details -->
-                <h5>Name</h5>
-                <p><strong>Username:</strong> username</p>
-                <p><strong>Email:</strong> email</p>
             </div>
-         </div>
-        
+            {% endfor %}
+        </div>
         
     </div>
 

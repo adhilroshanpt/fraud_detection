@@ -124,10 +124,16 @@
     </div>
 
     <script>
-        // Simulate scanning and redirect to next page
-        setTimeout(() => {
-            window.location.href = "{% url 'result_view' %}";
-        }, 3000);  // 3 seconds delay
+      setTimeout(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const packageName = urlParams.get('package'); // Get package from URL
+    if (packageName) {
+        window.location.href = `/app-details/?package=${packageName}`;
+    } else {
+        window.location.href = "{% url 'result_view' %}";
+    }
+}, 3000);
+
     </script>
     
     <script>

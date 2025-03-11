@@ -19,7 +19,8 @@ from django.urls import path
 from fraud_detection_app import views
 from django.conf import settings
 from django.conf.urls.static import static
-from fraud_detection_app.views import get_third_party_apps
+from fraud_detection_app.views import  search_apps ,app_details_view,scanning_view
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,16 +29,18 @@ urlpatterns = [
     path('user_register',views.UserRegisterView.as_view(),name='user_register'),
     path('admin_dashboard',views.AdminDashboardView.as_view(),name='dashboard'),
     path('admin_login',views.AdminLoginView.as_view(),name='adminlogin_view'),
+    path('admin_logout',views.AdminLogoutView.as_view(),name='adminlogout_view'),
     path('user_managment',views.UserManagmentView.as_view(),name='usermanagment_view'),
     path('application',views.ApplicationView.as_view(),name='application_view'),
     path('activities',views.ActivitiesView.as_view(),name='activities_view'),
     path('user_dashboard',views.UserDashboardView.as_view(),name='userdashboard_view'),
     path('scan_app',views.ScanAppView.as_view(),name='scanapp_view'),
-    path('scanning',views.ScanningView.as_view(),name='scanning_view'),
+    # path('scanning',views.ScanningView.as_view(),name='scanning_view'),
     path('result',views.ResultView.as_view(),name='result_view'),
-    path('test',views.TesView.as_view(),name='test_view'),
-    path('test2',views.Test2View.as_view(),name='test2_view'),
-    path('api/external-apps/', get_third_party_apps, name='third_party_apps'),
+    
+    path("search_apps/", search_apps, name="search_apps"),
+    path('app-details/', app_details_view, name='app_details_view'),
+    path('scanning/', scanning_view, name='scanning_view'),
 ]
 
 
